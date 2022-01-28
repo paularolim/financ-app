@@ -10,6 +10,11 @@ module.exports = {
         '@typescript-eslint/no-shadow': ['error'],
         'no-shadow': 'off',
         'no-undef': 'off',
+      },
+    },
+    {
+      files: ['index.tsx'],
+      rules: {
         '@typescript-eslint/explicit-function-return-type': ['error'],
       },
     },
