@@ -1,10 +1,14 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+
+import { ThemeProvider } from 'styled-components/native';
+
+import { theme } from './src/global/theme';
+import { Root } from './src/routes/Root';
 
 const App = (): JSX.Element => (
-  <View>
-    <Text>App.tsx</Text>
-  </View>
+  <ThemeProvider theme={theme}>
+    <Root />
+  </ThemeProvider>
 );
 
 export default App;
