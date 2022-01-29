@@ -2,22 +2,28 @@ import { TouchableOpacityProps } from 'react-native';
 
 import styled from 'styled-components/native';
 
+import { ButtonProps } from './types';
+
 export const Container = styled.TouchableOpacity.attrs(
   () =>
     ({
       activeOpacity: 0.7,
     } as TouchableOpacityProps),
-)`
-  background-color: ${({ theme }) => theme.colors.secondary};
-  width: 100%;
+)<Omit<ButtonProps, 'text'>>`
+  background-color: ${({ type, theme }) =>
+    type === 'primary' ? theme.colors.primary : theme.colors.secondary};
+  width: ${({ shape }) => (shape === 'round' ? '80px' : '100%')};
+  height: ${({ shape }) => (shape === 'round' ? '80px' : 'auto')};
   justify-content: center;
   align-items: center;
-  padding: 19px;
-  border-radius: 8px;
+  padding: ${({ shape }) => (shape === 'round' ? '0px' : '19px')};
+  border-radius: ${({ shape }) => (shape === 'round' ? 200 : 8)}px;
 `;
 
-export const Text = styled.Text`
+export const Text = styled.Text<Omit<ButtonProps, 'text'>>`
   color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fontSize.text}px;
+  font-size: ${({ shape, theme }) =>
+    shape === 'round' ? theme.fontSize.small : theme.fontSize.medium}px;
   font-weight: bold;
+  text-transform: ${({ shape }) => (shape === 'round' ? 'uppercase' : 'none')};
 `;
