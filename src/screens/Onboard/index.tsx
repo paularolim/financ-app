@@ -5,11 +5,15 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { OnboardSlide } from '../../components/OnboardSlide';
 import { slides } from './mocks';
 import { Container } from './styles';
 
 export const Onboard = (): JSX.Element => {
+  const navigation = useNavigation();
+
   const [index, setIndex] = useState(0);
 
   const flatListRef = useRef<FlatList>(null);
@@ -26,8 +30,7 @@ export const Onboard = (): JSX.Element => {
   );
 
   const skip = (): void => {
-    // TODO implement skip button - navigate to "welcome"
-    console.log('skip <<<<<<<<');
+    navigation.navigate('Welcome');
   };
 
   const scrollToNext = (): void => {
@@ -36,7 +39,7 @@ export const Onboard = (): JSX.Element => {
     if (newIndex !== slides.length) {
       setIndex(newIndex);
     } else {
-      // TODO implement navigate to "welcome"
+      navigation.navigate('Welcome');
     }
   };
 
