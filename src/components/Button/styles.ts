@@ -1,6 +1,13 @@
+import { TouchableOpacityProps } from 'react-native';
+
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled.TouchableOpacity.attrs(
+  () =>
+    ({
+      activeOpacity: 0.7,
+    } as TouchableOpacityProps),
+)`
   background-color: ${({ theme }) => theme.colors.secondary};
   width: 100%;
   justify-content: center;
