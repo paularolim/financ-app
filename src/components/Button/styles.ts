@@ -11,7 +11,11 @@ export const Container = styled.TouchableOpacity.attrs(
     } as TouchableOpacityProps),
 )<Omit<ButtonProps, 'text'>>`
   background-color: ${({ type, theme }) =>
-    type === 'primary' ? theme.colors.primary : theme.colors.secondary};
+    type === 'primary'
+      ? theme.colors.primary
+      : type === 'secondary'
+      ? theme.colors.secondary
+      : theme.colors.white};
   width: ${({ shape }) => (shape === 'round' ? '80px' : '100%')};
   height: ${({ shape }) => (shape === 'round' ? '80px' : 'auto')};
   justify-content: center;
