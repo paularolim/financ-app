@@ -16,8 +16,8 @@ export const Title = styled.Text`
 `;
 
 export const Subtitle = styled.Text`
-  font-size: ${({ theme }) => theme.fontSize.text}px;
+  font-size: ${({ theme }) => theme.fontSize.medium}px;
   color: ${({ theme }) => theme.colors.white};
-  margin-top: -${({ theme }) => theme.fontSize.text}px;
+  margin-top: -${({ theme }) => theme.fontSize.medium}px;
   margin-bottom: 90px;
 `;

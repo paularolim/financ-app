@@ -10,6 +10,6 @@ export const Introduction = (): JSX.Element => (
     <Title>Financ</Title>
     <Subtitle>Money manager</Subtitle>
 
-    <Button text="Get Started Now" />
+    <Button text="Get Started Now" type="secondary" />
   </Container>
 );
