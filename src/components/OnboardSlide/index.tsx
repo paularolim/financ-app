@@ -12,28 +12,42 @@ export const OnboardSlide = ({
   index,
   onPressNext,
   onSkip,
+  onDone,
+  textColor = 'dark',
 }: OnboardSlideProps): JSX.Element => (
   <Container>
-    <Header>
-      <TouchableOpacity onPress={onSkip}>
-        <Text>Skip</Text>
-      </TouchableOpacity>
-    </Header>
+    {onSkip && (
+      <Header>
+        <TouchableOpacity onPress={onSkip}>
+          <Text color={textColor}>Skip</Text>
+        </TouchableOpacity>
+      </Header>
+    )}
 
     <Info>
       <Image source={path as ImageSourcePropType} width={200} height={200} />
-      <Title>{title}</Title>
-      <Text>{text}</Text>
+      <Title color={textColor}>{title}</Title>
+      <Text color={textColor}>{text}</Text>
     </Info>
 
     <Footer>
-      <Text>{`${index}/3`}</Text>
-      <Button
-        text="Next"
-        shape="round"
-        type="secondary"
-        onPress={onPressNext}
-      />
+      {index && <Text color={textColor}>{`${index}/3`}</Text>}
+      {onPressNext && (
+        <Button
+          text="Next"
+          shape="round"
+          type="secondary"
+          onPress={onPressNext}
+        />
+      )}
     </Footer>
+    {onDone && (
+      <Button
+        icon="arrow-forward-outline"
+        shape="round"
+        type="tertiary"
+        onPress={onDone}
+      />
+    )}
   </Container>
 );
