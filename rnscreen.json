@@ -1,0 +1,8 @@
+{
+  "commonjs": false,
+  "style": "StyledComponents",
+  "components": "Arrow function (ES6)",
+  "typescript": true,
+  "screensPath": "src/screens",
+  "componentsPath": "src/components"
+}
