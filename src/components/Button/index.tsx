@@ -5,6 +5,12 @@ import { theme } from '../../global/theme';
 import { Container, Text } from './styles';
 import { ButtonProps } from './types';
 
+/**
+ * Button
+ *
+ * @example
+ * <Button text="Example" type="tertiary" />
+ */
 export const Button = ({
   text,
   icon,
