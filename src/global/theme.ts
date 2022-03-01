@@ -7,6 +7,8 @@ export const theme = {
     secondary_shadow: '#314BCE33',
     text: '#151940',
     text_light: '#7F8192',
+    shape: '#E5E5E5',
+    shape_dark: '#979797',
     white: '#FFFFFF',
   },
   fontSize: {
@@ -14,5 +16,10 @@ export const theme = {
     big: 44,
     medium: 18,
     small: 14,
+    xsmall: 12,
+  },
+  letterSpacing: {
+    normal: 0,
+    small: 2.55,
   },
 };
