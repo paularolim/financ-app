@@ -7,7 +7,7 @@ export const theme = {
     secondary_shadow: '#314BCE33',
     text: '#151940',
     text_light: '#7F8192',
-    shape: '#E5E5E5',
+    shape: '#F5F6FA',
     shape_dark: '#979797',
     white: '#FFFFFF',
   },
@@ -21,5 +21,8 @@ export const theme = {
   letterSpacing: {
     normal: 0,
     small: 2.55,
+  },
+  radius: {
+    small: 5,
   },
 };
