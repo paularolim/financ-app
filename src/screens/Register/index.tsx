@@ -3,7 +3,10 @@ import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
+// TODO: alias or index file on root for import
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
 import { Input } from '../../components/Input';
@@ -36,12 +39,29 @@ export const Register = (): JSX.Element => {
     setChecked(!checked);
   };
 
-  const handleRegister = (data: FormData): void => {
+  const handleRegister = ({ name, email, password }: FormData): void => {
     if (!checked) {
+      // TODO: error feedback
       console.log('Need to tick the checkbox');
     }
 
-    console.log(data);
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(response => {
+        firestore()
+          .collection('users')
+          .add({
+            uid: response.user.uid,
+            name,
+          })
+          .then(() => {
+            // TODO: link to home
+          })
+          // TODO: error feedback
+          .catch(error => console.log(error));
+      })
+      // TODO: error feedback
+      .catch(error => console.log(error));
   };
 
   return (
@@ -53,6 +73,7 @@ export const Register = (): JSX.Element => {
           </Text>
 
           <SocialContainer>
+            {/* TODO: social authenticate */}
             <SocialButton>Google</SocialButton>
             <SocialButton>Facebook</SocialButton>
           </SocialContainer>
@@ -86,6 +107,7 @@ export const Register = (): JSX.Element => {
           />
         </View>
 
+        {/* TODO: loading feedback while try to log in */}
         <Button text="Register" onPress={handleSubmit(handleRegister)} />
 
         <Footer>
