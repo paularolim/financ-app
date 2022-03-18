@@ -24,6 +24,7 @@ export const Input = ({
   error,
   control,
   name,
+  ...rest
 }: InputProps): JSX.Element => {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +43,7 @@ export const Input = ({
               onBlur={(): void => setIsFocused(false)}
               onChangeText={onChange}
               secureTextEntry={type === 'password' && !showPassword}
+              {...rest}
             />
           )}
         />
