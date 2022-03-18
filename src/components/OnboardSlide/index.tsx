@@ -44,6 +44,7 @@ export const OnboardSlide = ({
     {onDone && (
       <Button
         icon="arrow-forward-outline"
+        iconColor="secondary"
         shape="round"
         type="tertiary"
         onPress={onDone}
