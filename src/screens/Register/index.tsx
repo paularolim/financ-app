@@ -5,26 +5,20 @@ import { View } from 'react-native';
 import { yupResolver } from '@hookform/resolvers/yup';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 
 // TODO: alias or index file on root for import
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
 import { Input } from '../../components/Input';
-import { OrSeparator } from '../../components/OrSeparator';
-import { SocialButton } from '../../components/SocialButton';
 import { Text } from '../../components/Text';
+import { SocialAuth } from '../../feature-components/SocialAuth';
 import { schema } from './schema';
-import {
-  Arrow,
-  Container,
-  Footer,
-  LoginAction,
-  Scroll,
-  SocialContainer,
-} from './styles';
+import { Arrow, Container, Footer, LoginAction, Scroll } from './styles';
 import { FormData } from './types';
 
 export const Register = (): JSX.Element => {
+  const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
 
   const {
@@ -72,13 +66,7 @@ export const Register = (): JSX.Element => {
             Register
           </Text>
 
-          <SocialContainer>
-            {/* TODO: social authenticate */}
-            <SocialButton>Google</SocialButton>
-            <SocialButton>Facebook</SocialButton>
-          </SocialContainer>
-
-          <OrSeparator />
+          <SocialAuth />
 
           <Input
             placeholder="Name"
@@ -112,8 +100,7 @@ export const Register = (): JSX.Element => {
 
         <Footer>
           <Text fontSize="small">Already have an account?</Text>
-          {/* TODO: link to login screen */}
-          <LoginAction onPress={(): void => {}}>
+          <LoginAction onPress={(): void => navigation.navigate('Login')}>
             <Text
               color="secondary"
               fontSize="small"

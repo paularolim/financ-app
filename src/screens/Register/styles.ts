@@ -14,12 +14,6 @@ export const Container = styled.View`
 
 export const Scroll = styled.ScrollView``;
 
-export const SocialContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 10px 0px;
-`;
-
 export const Footer = styled.View`
   background-color: ${({ theme }) => theme.colors.white};
 `;
