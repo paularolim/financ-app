@@ -10,10 +10,13 @@ export const theme = {
     shape: '#F5F6FA',
     shape_dark: '#979797',
     white: '#FFFFFF',
+    success: '#33C759',
+    danger: '#FF4B55',
   },
   fontSize: {
     appTitle: 65,
     big: 44,
+    normal: 28,
     medium: 18,
     small: 14,
     xsmall: 12,
@@ -23,6 +26,11 @@ export const theme = {
     small: 2.55,
   },
   radius: {
+    default: 20,
     small: 5,
+  },
+  iconSize: {
+    default: 40,
+    small: 20,
   },
 };

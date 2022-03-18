@@ -1,5 +1,6 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import { Icon } from '..';
 
 import { theme } from '../../global/theme';
 import { Container, Text } from './styles';
@@ -14,6 +15,7 @@ import { ButtonProps } from './types';
 export const Button = ({
   text,
   icon,
+  iconColor = 'white',
   type = 'primary',
   shape = 'square',
   onPress,
@@ -24,6 +26,12 @@ export const Button = ({
         {text}
       </Text>
     )}
-    {icon && <Icon name={icon} size={30} color={theme.colors.secondary} />}
+    {icon && (
+      <Icon
+        name={icon}
+        size="default"
+        color={theme.colors[iconColor] as typeof iconColor}
+      />
+    )}
   </Container>
 );
