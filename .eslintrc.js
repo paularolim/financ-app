@@ -12,12 +12,6 @@ module.exports = {
         'no-undef': 'off',
       },
     },
-    {
-      files: ['index.tsx'],
-      rules: {
-        '@typescript-eslint/explicit-function-return-type': ['error'],
-      },
-    },
   ],
   rules: {
     'arrow-body-style': ['error', 'as-needed'],
