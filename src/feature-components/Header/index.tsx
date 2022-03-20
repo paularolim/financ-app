@@ -3,7 +3,8 @@ import { FlatList, StyleSheet } from 'react-native';
 
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 
-import { Icon, Text } from '../../components';
+import { Icon } from '../../components/Icon';
+import { Text } from '../../components/Text';
 import { Card } from '../Card';
 import { cardMock } from './mock';
 import { Container, IconWrapper, Separator, Title } from './styles';

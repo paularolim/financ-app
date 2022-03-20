@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Text } from '../../components';
+import { Text } from '../../components/Text';
 import { formatCurrency } from '../../functions/formatCurrency';
 import { Container, GraphicBar, IncomeBar, Info, OutcomeBar } from './styles';
 import { GraphicProps } from './types';

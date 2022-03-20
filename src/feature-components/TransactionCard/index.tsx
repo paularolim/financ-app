@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Icon, Text } from '../../components';
+import { Icon } from '../../components/Icon';
+import { Text } from '../../components/Text';
 import { formatCurrency } from '../../functions/formatCurrency';
 import { Container, IconWrapper, InfoContainer, InfoWrapper } from './styles';
 import { TransactionCardProps } from './types';
@@ -10,9 +11,9 @@ export const TransactionCard = ({
   icon = 'add',
   title,
   description,
-  currency,
+  currency = 'BRL',
   value,
-  type,
+  type = 'income',
 }: TransactionCardProps): JSX.Element => (
   <Container>
     <IconWrapper type={type}>

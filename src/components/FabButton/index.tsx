@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 
-import { Button, Icon, Text } from '..';
-
+import { Button } from '../Button';
+import { Icon } from '../Icon';
+import { Text } from '../Text';
 import { Container, Menu, MenuItem } from './styles';
+import { FabButtonProps } from './types';
 
+// TODO: improve props
 /**
  * FabButton
  *
  * @example
  * <FabButton />
  */
-export const FabButton = (): JSX.Element => {
+export const FabButton = ({
+  onPressTransaction,
+}: FabButtonProps): JSX.Element => {
   const [visible, setVisible] = useState(false);
 
   return (
     <Container>
       {visible && (
         <Menu>
-          {/* TODO: link to transaction form */}
-          <MenuItem>
+          <MenuItem onPress={onPressTransaction}>
             <Icon
               name="cash-outline"
               color="text"

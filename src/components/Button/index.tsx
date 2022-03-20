@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { Icon } from '..';
-
 import { theme } from '../../global/theme';
+import { Icon } from '../Icon';
 import { Container, Text } from './styles';
 import { ButtonProps } from './types';
 

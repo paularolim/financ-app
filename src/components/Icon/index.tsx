@@ -38,7 +38,7 @@ export const Icon = ({
     <VectorIcon
       name={name}
       size={theme.iconSize[size]}
-      color={color}
+      color={theme.colors[color]}
       style={styles.icon}
     />
   );
