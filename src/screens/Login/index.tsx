@@ -11,6 +11,7 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
 import { SocialAuth } from '../../feature-components/SocialAuth';
+import { setItem } from '../../services/storage';
 import { schema } from './schema';
 import { Arrow, Container, Footer, LoginAction, Scroll } from './styles';
 import { FormData } from './types';
@@ -29,6 +30,11 @@ export const Login = (): JSX.Element => {
   const handleLogin = ({ email, password }: FormData): void => {
     auth()
       .signInWithEmailAndPassword(email, password)
+      .then(response => {
+        console.log('login', response);
+        const id = response.user.uid;
+        setItem('user', JSON.stringify({ id }));
+      })
       // TODO: feedback the error
       .catch(error => console.log(error));
   };
