@@ -2,7 +2,18 @@ import { TouchableOpacityProps } from 'react-native';
 
 import styled from 'styled-components/native';
 
-import { ButtonProps } from './types';
+import { theme } from '../../global/theme';
+import { ButtonProps, ButtonType } from './types';
+
+const buttonBg = (type: ButtonType) => {
+  const types: Record<ButtonType, string> = {
+    primary: theme.colors.primary,
+    secondary: theme.colors.secondary,
+    tertiary: theme.colors.white,
+  };
+
+  return types[type] || null;
+};
 
 export const Container = styled.TouchableOpacity.attrs(
   () =>
@@ -10,12 +21,8 @@ export const Container = styled.TouchableOpacity.attrs(
       activeOpacity: 0.7,
     } as TouchableOpacityProps),
 )<Omit<ButtonProps, 'text'>>`
-  background-color: ${({ type, theme }) =>
-    type === 'primary'
-      ? theme.colors.primary
-      : type === 'secondary'
-      ? theme.colors.secondary
-      : theme.colors.white};
+  background-color: ${({ type }) =>
+    type ? buttonBg(type) : theme.colors.shape};
   width: ${({ shape }) => (shape === 'round' ? '80px' : '100%')};
   height: ${({ shape }) => (shape === 'round' ? '80px' : 'auto')};
   justify-content: center;
@@ -25,8 +32,8 @@ export const Container = styled.TouchableOpacity.attrs(
 `;
 
 export const Text = styled.Text<Omit<ButtonProps, 'text'>>`
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ shape, theme }) =>
+  color: ${theme.colors.white};
+  font-size: ${({ shape }) =>
     shape === 'round' ? theme.fontSize.small : theme.fontSize.medium}px;
   font-weight: bold;
   text-transform: ${({ shape }) => (shape === 'round' ? 'uppercase' : 'none')};

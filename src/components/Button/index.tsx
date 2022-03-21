@@ -1,4 +1,5 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import { theme } from '../../global/theme';
 import { Icon } from '../Icon';
@@ -17,10 +18,12 @@ export const Button = ({
   iconColor = 'white',
   type = 'primary',
   shape = 'square',
-  onPress,
+  loading = false,
+  ...rest
 }: ButtonProps): JSX.Element => (
-  <Container type={type} shape={shape} onPress={onPress}>
-    {text && (
+  <Container type={type} shape={shape} {...rest}>
+    {loading && text && <ActivityIndicator color={theme.colors.white} />}
+    {!loading && text && (
       <Text type={type} shape={shape}>
         {text}
       </Text>

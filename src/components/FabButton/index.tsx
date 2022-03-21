@@ -25,22 +25,22 @@ export const FabButton = ({
           <MenuItem onPress={onPressTransaction}>
             <Icon
               name="cash-outline"
-              color="text"
+              color="white"
               size="small"
               marginRight={10}
             />
-            <Text>Transaction</Text>
+            <Text color="white">Transaction</Text>
           </MenuItem>
 
           {/* TODO: link to wallet form */}
           <MenuItem>
             <Icon
               name="wallet-outline"
-              color="text"
+              color="white"
               size="small"
               marginRight={10}
             />
-            <Text>Wallets</Text>
+            <Text color="white">Wallets</Text>
           </MenuItem>
         </Menu>
       )}

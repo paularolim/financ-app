@@ -15,7 +15,7 @@ export const Menu = styled.View`
 `;
 
 export const MenuItem = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.text_light};
   border-radius: 20px;
   padding: 10px 20px;
   margin: 5px 0px;
