@@ -11,7 +11,7 @@ export const getAllTransactions = (
 
   firestore()
     .collection('transactions')
-    .where('userId', '==', user?.id)
+    .where('user', '==', user?.id)
     .onSnapshot(querySnapshot => {
       const _transactions: Transaction[] = [];
       querySnapshot.forEach(doc => {
@@ -20,8 +20,9 @@ export const getAllTransactions = (
           title: doc.data().title,
           description: doc.data().description,
           amount: doc.data().amount,
+          type: doc.data().type,
         });
-        callback(_transactions);
       });
+      callback(_transactions);
     });
 };

@@ -47,7 +47,7 @@ export const TransactionForm = ({
       description,
       amount,
       user: user?.id,
-      transactionType,
+      type: transactionType,
     };
 
     console.log(transaction);
