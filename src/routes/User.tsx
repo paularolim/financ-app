@@ -8,9 +8,11 @@ import {
 } from '@react-navigation/drawer';
 
 import { Dashboard } from '../screens/Dashboard';
+import { Details } from '../screens/Details';
 
 export type UserStackParamList = {
   Dashboard: undefined;
+  Details: undefined;
 };
 
 const { Navigator, Screen } = createDrawerNavigator<UserStackParamList>();
@@ -28,5 +30,6 @@ export const User = () => (
     )}
   >
     <Screen name="Dashboard" component={Dashboard} />
+    <Screen name="Details" component={Details} />
   </Navigator>
 );

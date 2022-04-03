@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
@@ -26,6 +27,8 @@ export const Dashboard = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -73,6 +76,9 @@ export const Dashboard = (): JSX.Element => {
                 <TransactionCard
                   id={item.id}
                   title={item.title}
+                  onPress={() => {
+                    navigation.navigate('Details');
+                  }}
                   description={item.description}
                   value={item.amount}
                   type={item.type}

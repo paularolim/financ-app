@@ -14,8 +14,9 @@ export const TransactionCard = ({
   currency = 'BRL',
   value,
   type = 'income',
+  ...rest
 }: TransactionCardProps): JSX.Element => (
-  <Container>
+  <Container {...rest}>
     <IconWrapper type={type}>
       <Icon name={icon} />
     </IconWrapper>
