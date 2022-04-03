@@ -1,6 +1,6 @@
 import { CurrencyTypes } from '../global/types/CurrencyTypes';
 
-export const CurrencyLangs = {
+export const CurrencyLangs: Record<CurrencyTypes, string> = {
   BRL: 'pr-BR',
   USD: 'en-US',
 };
