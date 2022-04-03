@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 
-import { Container, Error, Icon, InputWrapper, TextInput } from './styles';
+import { Text } from '../Text';
+import { Container, Icon, InputWrapper, TextInput } from './styles';
 import { InputProps } from './types';
 
 /**
@@ -56,7 +57,11 @@ export const Input = ({
           </TouchableOpacity>
         )}
       </InputWrapper>
-      {error && <Error>{error}</Error>}
+      {error && (
+        <Text color="primary" fontSize="small">
+          {error}
+        </Text>
+      )}
     </Container>
   );
 };

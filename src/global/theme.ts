@@ -12,6 +12,8 @@ export const theme = {
     white: '#FFFFFF',
     success: '#33C759',
     danger: '#FF4B55',
+    success_light: '#c2efcd',
+    danger_light: '#ffb3b6',
   },
   fontSize: {
     appTitle: 65,

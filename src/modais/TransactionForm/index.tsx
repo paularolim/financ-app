@@ -7,41 +7,63 @@ import firestore from '@react-native-firebase/firestore';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
+import { TransactionType } from '../../components/TransactionType';
 import { User } from '../../global/types/User';
 import { getItem } from '../../services/storage';
 import { schema } from './schema';
-import { Container } from './styles';
+import { Container, TransactionButtonGroup, TransactionGroup } from './styles';
 import { FormData, TransactionFormProps } from './types';
 
 export const TransactionForm = ({
   onClose,
 }: TransactionFormProps): JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
+  const [transactionType, setTransactionType] = useState<
+    'income' | 'outcome' | null
+  >(null);
+  const [transactionTypeError, setTransactionTypeError] = useState<
+    string | null
+  >(null);
+  const [registerLoading, setRegisterLoading] = useState<boolean>(false);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const handleRegister = ({ title, description, amount }: FormData): void => {
-    console.log({ title, description, amount, user: user?.id });
+    if (!transactionType) {
+      return setTransactionTypeError('Transaction type is required!');
+    }
+
+    setRegisterLoading(true);
+
+    const transaction = {
+      title,
+      description,
+      amount,
+      user: user?.id,
+      transactionType,
+    };
+
+    console.log(transaction);
     firestore()
       .collection('transactions')
-      .add({
-        title,
-        description,
-        amount,
-        userId: user?.id,
-      })
+      .add(transaction)
       .then(() => {
-        // TODO: add user id
-        // TODO: close modal
+        reset();
+        setTransactionType(null);
       })
       // TODO: error feedback
-      .catch(error => console.log(error));
+      .catch(error => console.log(error))
+      .finally(() => {
+        setRegisterLoading(false);
+        setTransactionTypeError(null);
+      });
   };
 
   useEffect(() => {
@@ -79,8 +101,38 @@ export const TransactionForm = ({
         control={control}
         name="amount"
       />
+      <TransactionGroup>
+        <TransactionButtonGroup>
+          <TransactionType
+            text="Income"
+            type="income"
+            onPress={() => {
+              setTransactionType('income');
+            }}
+            active={transactionType === 'income'}
+          />
+          <TransactionType
+            text="Outcome"
+            type="outcome"
+            onPress={() => {
+              setTransactionType('outcome');
+            }}
+            active={transactionType === 'outcome'}
+          />
+        </TransactionButtonGroup>
 
-      <Button text="Register" onPress={handleSubmit(handleRegister)} />
+        {transactionTypeError && (
+          <Text color="primary" fontSize="small">
+            {transactionTypeError}
+          </Text>
+        )}
+      </TransactionGroup>
+
+      <Button
+        text="Register"
+        onPress={handleSubmit(handleRegister)}
+        loading={registerLoading}
+      />
       <Button text="Close" type="secondary" onPress={onClose} />
     </Container>
   );
