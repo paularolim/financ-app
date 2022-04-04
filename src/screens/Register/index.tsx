@@ -3,8 +3,6 @@ import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 
 // TODO: alias or index file on root for import
@@ -13,6 +11,7 @@ import { Checkbox } from '../../components/Checkbox';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
 import { SocialAuth } from '../../feature-components/SocialAuth';
+import { createUser } from '../../services/auth';
 import { schema } from './schema';
 import { Arrow, Container, Footer, LoginAction, Scroll } from './styles';
 import { FormData } from './types';
@@ -20,6 +19,7 @@ import { FormData } from './types';
 export const Register = (): JSX.Element => {
   const navigation = useNavigation();
   const [checked, setChecked] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
 
   const {
     control,
@@ -37,25 +37,11 @@ export const Register = (): JSX.Element => {
     if (!checked) {
       // TODO: error feedback
       console.log('Need to tick the checkbox');
+      return;
     }
 
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(response => {
-        firestore()
-          .collection('users')
-          .add({
-            uid: response.user.uid,
-            name,
-          })
-          .then(() => {
-            // TODO: link to home
-          })
-          // TODO: error feedback
-          .catch(error => console.log(error));
-      })
-      // TODO: error feedback
-      .catch(error => console.log(error));
+    setRegisterLoading(true);
+    createUser(email, password, name).finally(() => setRegisterLoading(false));
   };
 
   return (
@@ -95,8 +81,12 @@ export const Register = (): JSX.Element => {
           />
         </View>
 
-        {/* TODO: loading feedback while try to log in */}
-        <Button text="Register" onPress={handleSubmit(handleRegister)} />
+        <Button
+          text="Register"
+          onPress={handleSubmit(handleRegister)}
+          loading={registerLoading}
+          disabled={registerLoading}
+        />
 
         <Footer>
           <Text fontSize="small">Already have an account?</Text>

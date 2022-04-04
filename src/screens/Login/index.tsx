@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
 // TODO: alias or index file on root for import
@@ -11,12 +10,14 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
 import { SocialAuth } from '../../feature-components/SocialAuth';
-import { setItem } from '../../services/storage';
+import { login } from '../../services/auth';
 import { schema } from './schema';
 import { Arrow, Container, Footer, LoginAction, Scroll } from './styles';
 import { FormData } from './types';
 
 export const Login = (): JSX.Element => {
+  const [loginLoading, setLoginLoading] = useState(false);
+
   const navigation = useNavigation();
 
   const {
@@ -28,15 +29,8 @@ export const Login = (): JSX.Element => {
   });
 
   const handleLogin = ({ email, password }: FormData): void => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(response => {
-        console.log('login', response);
-        const id = response.user.uid;
-        setItem('user', JSON.stringify({ id }));
-      })
-      // TODO: feedback the error
-      .catch(error => console.log(error));
+    setLoginLoading(true);
+    login(email, password).finally(() => setLoginLoading(false));
   };
 
   return (
@@ -68,8 +62,12 @@ export const Login = (): JSX.Element => {
         </View>
         {/* TODO: implement forget password */}
 
-        {/* TODO: loading feedback while try to log in */}
-        <Button text="Login" onPress={handleSubmit(handleLogin)} />
+        <Button
+          text="Login"
+          onPress={handleSubmit(handleLogin)}
+          loading={loginLoading}
+          disabled={loginLoading}
+        />
 
         <Footer>
           <Text fontSize="small">Don’t have an account?</Text>
