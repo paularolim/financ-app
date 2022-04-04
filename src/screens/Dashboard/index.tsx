@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
@@ -7,6 +6,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
 
 import { FabButton } from '../../components/FabButton';
 import { Header } from '../../feature-components/Header';
@@ -76,12 +77,12 @@ export const Dashboard = (): JSX.Element => {
                 <TransactionCard
                   id={item.id}
                   title={item.title}
-                  onPress={() => {
-                    navigation.navigate('Details');
-                  }}
                   description={item.description}
                   value={item.amount}
                   type={item.type}
+                  onPress={() => {
+                    navigation.navigate('Details');
+                  }}
                 />
               )}
               keyExtractor={(item): string => item.id}
