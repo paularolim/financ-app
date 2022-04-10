@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 
-import firestore from '@react-native-firebase/firestore';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { Icon } from '../../components/Icon';
 import { Text } from '../../components/Text';
 import { useUserStore } from '../../core/application/states/user';
 import { Wallet } from '../../core/domain/entities/Wallet';
+import { getAllWalletsFromUser } from '../../screens/Dashboard/presenter';
 import { Card } from '../Card';
 import { Container, IconWrapper, Separator, Title } from './styles';
 import { HeaderProps } from './types';
@@ -32,35 +32,8 @@ export const Header = ({ title }: HeaderProps): JSX.Element => {
   const user = useUserStore().user;
 
   useEffect(() => {
-    console.log('[DASHBOARD HEADER] user', user);
-  }, [user]);
-
-  useEffect(() => {
-    console.log('[DASHBOARD HEADER] useEffect wallets');
     if (user) {
-      return firestore()
-        .collection('wallets')
-        .where('user', '==', user.id)
-        .onSnapshot(querySnapshot => {
-          const _wallets: Wallet[] = [];
-
-          querySnapshot.forEach(doc => {
-            console.log(`[DASHBOARD HEADER] +1 wallet found (${doc.id})`);
-
-            _wallets.push({
-              id: doc.id,
-              title: doc.data().title || 'Name not found',
-              balance: doc.data().balance || 0,
-              income: doc.data().income || 0,
-              outcome: doc.data().outcome || 0,
-              currency: doc.data().currency || 'BRL',
-              user: doc.data().user || '',
-              transactions: doc.data().transactions || [],
-            });
-          });
-
-          setWallets(_wallets);
-        });
+      getAllWalletsFromUser(user, setWallets, error => console.log(error));
     }
   }, [user]);
 

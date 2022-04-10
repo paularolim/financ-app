@@ -1,13 +1,14 @@
 import firestore from '@react-native-firebase/firestore';
 
+import { User } from '../core/domain/entities/User';
+import { Wallet } from '../core/domain/entities/Wallet';
 import { Transaction } from '../global/types/Transaction';
-import { User } from '../global/types/User';
-import { Wallet } from '../global/types/Wallet';
 
 /**
  * Get an user by id.
  * @param id id from user.
  * @returns an user.
+ * @deprecated
  */
 export const getUser = async (id: string) => {
   console.log(`[FIRESTORE] finding user ${id}`);
@@ -18,6 +19,7 @@ export const getUser = async (id: string) => {
  * Get all transactions from an user.
  * @param user the user logged.
  * @param callback an callback to save transactions.
+ * @deprecated
  */
 export const getAllTransactions = (
   user: User | null,
@@ -45,7 +47,9 @@ export const getAllTransactions = (
   }
 };
 
-/** */
+/**
+ * @deprecated
+ */
 export const getAllWallets = (
   user: User | null,
   callback: (wallets: Wallet[]) => void,
@@ -66,6 +70,8 @@ export const getAllWallets = (
             income: doc.data().income,
             outcome: doc.data().outcome,
             balance: doc.data().balance,
+            user: doc.data().user,
+            transactions: doc.data().transactions,
           });
         });
         console.log(wallets);

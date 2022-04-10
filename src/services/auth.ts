@@ -8,6 +8,7 @@ import { User } from '../core/domain/entities/User';
  * @param email - email from user.
  * @param password - password from user.
  * @param name - name from user.
+ * @deprecated
  */
 export const createUser = async (
   email: string,
@@ -42,6 +43,7 @@ export const createUser = async (
  * Log in an user.
  * @param email - email from user.
  * @param password - password from user.
+ * @deprecated
  */
 export const login = async (email: string, password: string): Promise<void> => {
   auth()
@@ -62,6 +64,7 @@ export const login = async (email: string, password: string): Promise<void> => {
 
 /**
  * Log out an user.
+ * @deprecated
  */
 export const logout = () => {
   auth()
