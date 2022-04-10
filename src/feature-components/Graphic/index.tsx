@@ -20,13 +20,13 @@ export const Graphic = ({
     const calculatePercentage = (): void => {
       const _total = income - outcome;
 
-      let _income = ((income - outcome) * 100) / income;
+      let _income = ((income - outcome) * 100) / income || 0;
       setIncomePercentage(_income);
       _income = _income < 0 ? 0 : _income;
       _income = _income > 100 ? 100 : _income;
       setIncomePercentageStyle(_income);
 
-      let _outcome = ((income - _total) * 100) / income;
+      let _outcome = ((income - _total) * 100) / income || 0;
       setOutcomePercentage(_outcome);
       _outcome = _outcome < 0 ? 0 : _outcome;
       _outcome = _outcome > 100 ? 100 : _outcome;

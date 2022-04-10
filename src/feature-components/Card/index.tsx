@@ -9,9 +9,9 @@ import { CardProps } from './types';
 export const Card = ({
   title,
   value,
-  currency,
-  income,
-  outcome,
+  currency = 'BRL',
+  income = 0,
+  outcome = 0,
 }: CardProps): JSX.Element => (
   <Container>
     <Text fontSize="normal">{title}</Text>
