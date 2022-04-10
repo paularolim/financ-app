@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth';
 
-import { removeItem, setItem } from './storage';
+import { useUserStore } from '../core/application/states/user';
+import { User } from '../core/domain/entities/User';
 
 /**
  * Create an user on authenticator by firebase.
@@ -20,14 +21,14 @@ export const createUser = async (
         user
           .updateProfile({ displayName: name })
           .then(() => {
-            const formatedUser = {
+            const formatedUser: User = {
               id: user.uid,
               name,
               email,
             };
 
             console.log(`[REGISTER] User ${user.uid} successfully updated`);
-            setItem('user', JSON.stringify(formatedUser));
+            useUserStore.setState({ user: formatedUser });
           })
           // TODO: error feedback
           .catch(error => console.log(error));
@@ -46,14 +47,14 @@ export const login = async (email: string, password: string): Promise<void> => {
   auth()
     .signInWithEmailAndPassword(email, password)
     .then(({ user }) => {
-      const formatedUser = {
+      const formatedUser: User = {
         id: user.uid,
-        name: user.displayName,
-        email: user.email,
+        name: user.displayName || '',
+        email: user.email || '',
       };
 
-      console.log(`[LOGIN] User ${user.uid} successfully logged`);
-      setItem('user', JSON.stringify(formatedUser));
+      console.log(`[LOGIN] User ${user.uid} successfully logged in.`);
+      useUserStore.setState({ user: formatedUser });
     })
     // TODO: feedback the error
     .catch(error => console.log(error));
@@ -65,7 +66,10 @@ export const login = async (email: string, password: string): Promise<void> => {
 export const logout = () => {
   auth()
     .signOut()
-    .then(() => removeItem('user'))
+    .then(() => {
+      console.log('[LOGOUT] User successfully logged out.');
+      useUserStore.setState({ user: null });
+    })
     // TODO: error feedback
     .catch(error => console.log(error));
 };
