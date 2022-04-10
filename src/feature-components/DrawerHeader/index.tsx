@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Text } from '../../components/Text';
-import { User } from '../../global/types/User';
-import { getItem } from '../../services/storage';
+import { useUserStore } from '../../core/application/states/user';
 import { Container, ProfileImage } from './styles';
 
 const uri = 'https://static.diverseui.com/female-77.jpg';
 
 export const DrawerHeader = () => {
-  const [user, setUser] = useState<User | null>();
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const userFromStorage = await getItem('user');
-      setUser(JSON.parse(userFromStorage || ''));
-    };
-
-    loadUser();
-  }, []);
+  const user = useUserStore().user;
 
   return (
     <Container>
