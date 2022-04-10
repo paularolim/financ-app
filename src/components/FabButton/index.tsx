@@ -15,6 +15,7 @@ import { FabButtonProps } from './types';
  */
 export const FabButton = ({
   onPressTransaction,
+  onPressWallet,
 }: FabButtonProps): JSX.Element => {
   const [visible, setVisible] = useState(false);
 
@@ -33,7 +34,7 @@ export const FabButton = ({
           </MenuItem>
 
           {/* TODO: link to wallet form */}
-          <MenuItem>
+          <MenuItem onPress={onPressWallet}>
             <Icon
               name="wallet-outline"
               color="white"

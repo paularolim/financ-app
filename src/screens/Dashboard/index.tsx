@@ -10,13 +10,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import { FabButton } from '../../components/FabButton';
+import { useUserStore } from '../../core/application/states/user';
 import { Header } from '../../feature-components/Header';
 import { TransactionCard } from '../../feature-components/TransactionCard';
 import { Transaction } from '../../global/types/Transaction';
-import { User } from '../../global/types/User';
 import { TransactionForm } from '../../modais/TransactionForm';
+import { WalletForm } from '../../modais/WalletForm';
 import { getAllTransactions } from '../../services/firestore';
-import { getItem } from '../../services/storage';
 import { TransactionsEmptyList } from './components/TransactionsEmptyList';
 import { TransactionsHeader } from './components/TransactionsHeader';
 import { TransactionsSeparator } from './components/TransactionsSeparator';
@@ -24,20 +24,13 @@ import { Container } from './styles';
 
 export const Dashboard = (): JSX.Element => {
   const [modalTransactionVisible, setModalTransactionVisible] = useState(false);
+  const [modalWalletVisible, setModalWalletVisible] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
 
+  const user = useUserStore().user;
   const navigation = useNavigation();
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const result = await getItem('user');
-      setUser(result ? (JSON.parse(result) as User) : null);
-    };
-    loadUser();
-  }, []);
 
   useEffect(() => {
     const subscriber = () => {
@@ -54,9 +47,10 @@ export const Dashboard = (): JSX.Element => {
     <Container>
       <Header title="Dashboard" />
       <FabButton
-        onPressTransaction={(): void =>
+        onPressTransaction={() =>
           setModalTransactionVisible(!modalTransactionVisible)
         }
+        onPressWallet={() => setModalWalletVisible(!modalWalletVisible)}
       />
 
       {loading ? (
@@ -93,11 +87,17 @@ export const Dashboard = (): JSX.Element => {
               style={styles.flatListStyle}
             />
           </RefreshControl>
+
           <Modal visible={modalTransactionVisible}>
             <TransactionForm
-              onClose={(): void =>
+              onClose={() =>
                 setModalTransactionVisible(!modalTransactionVisible)
               }
+            />
+          </Modal>
+          <Modal visible={modalWalletVisible}>
+            <WalletForm
+              onClose={() => setModalWalletVisible(!modalWalletVisible)}
             />
           </Modal>
         </>
