@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import firestore from '@react-native-firebase/firestore';
 
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
 import { useUserStore } from '../../core/application/states/user';
+import { createWallet } from './presenter';
 import { schema } from './schema';
 import { Container } from './styles';
 import { FormData, WalletFormProps } from './types';
@@ -29,25 +29,21 @@ export const WalletForm = ({ onClose }: WalletFormProps): JSX.Element => {
   const handleRegister = ({ title }: FormData): void => {
     setRegisterLoading(true);
 
-    const wallet = {
-      title,
-      balance: 0,
-      incomes: 0,
-      outcomes: 0,
-      user: user?.id,
-    };
+    if (user) {
+      createWallet(
+        title,
+        user,
+        () => {
+          reset();
+        },
+        // TODO: IMPROVE ERROR FEEDBACK
+        () => {
+          console.log('Error while create wallet!');
+        },
+      );
+    }
 
-    firestore()
-      .collection('wallets')
-      .add(wallet)
-      .then(() => {
-        reset();
-      })
-      // TODO: error feedback
-      .catch(error => console.log(error))
-      .finally(() => {
-        setRegisterLoading(false);
-      });
+    setRegisterLoading(false);
   };
 
   return (

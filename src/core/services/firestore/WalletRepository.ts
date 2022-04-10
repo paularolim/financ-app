@@ -2,12 +2,21 @@ import firestore from '@react-native-firebase/firestore';
 
 import { User } from '../../domain/entities/User';
 import { Wallet } from '../../domain/entities/Wallet';
-import type { IWalletRepository } from '../../domain/repositories/IWalletRepository';
+import type {
+  InputCreateWallet,
+  IWalletRepository,
+} from '../../domain/repositories/IWalletRepository';
 
 export class WalletRepository implements IWalletRepository {
-  createWallet(wallet: Wallet): Wallet {
-    // TODO: implement method.
-    return wallet;
+  private collection = 'wallets';
+
+  createWallet({ title, user }: InputCreateWallet): void {
+    firestore()
+      .collection(this.collection)
+      .add({ title, user })
+      .catch(error => {
+        throw new Error(error);
+      });
   }
 
   getWallet(wallet: Partial<Wallet>): Wallet {
@@ -22,7 +31,7 @@ export class WalletRepository implements IWalletRepository {
   ): void {
     try {
       firestore()
-        .collection('wallets')
+        .collection(this.collection)
         .where('user', '==', user.id)
         .onSnapshot(querySnapshot => {
           const _wallets: Wallet[] = [];

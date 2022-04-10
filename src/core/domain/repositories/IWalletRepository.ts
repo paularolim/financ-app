@@ -1,12 +1,16 @@
 import { User } from '../entities/User';
 import { Wallet } from '../entities/Wallet';
 
+export interface InputCreateWallet {
+  title: string;
+  user: string;
+}
+
 export interface IWalletRepository {
   /**
    * Create a wallet/account in the app.
-   * @param wallet Wallet
    */
-  createWallet(wallet: Wallet): Wallet;
+  createWallet(input: InputCreateWallet): void;
 
   /**
    * Get a wallet/account by id.
