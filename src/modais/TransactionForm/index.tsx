@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import firestore from '@react-native-firebase/firestore';
 
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
+import { Select } from '../../components/Select';
 import { Text } from '../../components/Text';
 import { TransactionType } from '../../components/TransactionType';
-import { User } from '../../global/types/User';
-import { getItem } from '../../services/storage';
+import { useUserStore } from '../../core/application/states/user';
+import { Wallet } from '../../core/domain/entities/Wallet';
+import { createTransaction, getAllWalletsFromUser } from './presenter';
 import { schema } from './schema';
 import { Container, TransactionButtonGroup, TransactionGroup } from './styles';
 import { FormData, TransactionFormProps } from './types';
@@ -17,14 +18,20 @@ import { FormData, TransactionFormProps } from './types';
 export const TransactionForm = ({
   onClose,
 }: TransactionFormProps): JSX.Element => {
-  const [user, setUser] = useState<User | null>(null);
   const [transactionType, setTransactionType] = useState<
     'income' | 'outcome' | null
   >(null);
+  const [walletOptions, setWalletOptions] = useState<Wallet[]>([]);
+  const [walletSelected, setWalletSelected] = useState<string | null>(null);
+
   const [transactionTypeError, setTransactionTypeError] = useState<
     string | null
   >(null);
+  const [walletError, setWalletError] = useState<string | null>(null);
+
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
+
+  const user = useUserStore().user;
 
   const {
     control,
@@ -40,45 +47,54 @@ export const TransactionForm = ({
       return setTransactionTypeError('Transaction type is required!');
     }
 
+    if (!walletSelected) {
+      return setWalletError('Wallet is required!');
+    }
+
     setRegisterLoading(true);
 
-    const transaction = {
+    createTransaction(
+      walletSelected,
       title,
       description,
-      amount,
-      user: user?.id,
-      type: transactionType,
-    };
-
-    console.log(transaction);
-    firestore()
-      .collection('transactions')
-      .add(transaction)
-      .then(() => {
+      parseFloat(amount),
+      transactionType,
+      () => {
         reset();
-        setTransactionType(null);
-      })
-      // TODO: error feedback
-      .catch(error => console.log(error))
-      .finally(() => {
-        setRegisterLoading(false);
-        setTransactionTypeError(null);
-      });
+      },
+      error => {
+        console.log(error);
+      },
+    );
+
+    setRegisterLoading(false);
   };
 
   useEffect(() => {
-    const loadUser = async () => {
-      const result = await getItem('user');
-      setUser(result ? (JSON.parse(result) as User) : null);
-    };
-    loadUser();
-  }, []);
+    if (user) {
+      getAllWalletsFromUser(user, setWalletOptions, error => {
+        console.log(error);
+      });
+    }
+  }, [user]);
 
   return (
     <Container>
       <Text fontSize="medium" bold>
         Register Transaction
       </Text>
+
+      <Text>Wallet</Text>
+      {walletOptions ? (
+        <Select
+          items={walletOptions}
+          selectedItem={walletSelected}
+          onChangeItem={setWalletSelected}
+        />
+      ) : (
+        <Text>Add a new wallet</Text>
+      )}
+      {walletError && <Text>{walletError}</Text>}
 
       <Text>Title</Text>
       <Input
