@@ -21,12 +21,14 @@ export const Graphic = ({
       const _total = income - outcome;
 
       let _income = ((income - outcome) * 100) / income || 0;
+      _income = parseFloat(_income.toFixed(2));
       setIncomePercentage(_income);
       _income = _income < 0 ? 0 : _income;
       _income = _income > 100 ? 100 : _income;
       setIncomePercentageStyle(_income);
 
       let _outcome = ((income - _total) * 100) / income || 0;
+      _outcome = parseFloat(_outcome.toFixed(2));
       setOutcomePercentage(_outcome);
       _outcome = _outcome < 0 ? 0 : _outcome;
       _outcome = _outcome > 100 ? 100 : _outcome;
