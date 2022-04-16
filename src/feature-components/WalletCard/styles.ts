@@ -1,7 +1,9 @@
+import { Dimensions } from 'react-native';
+
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  width: 300px;
+  width: ${Dimensions.get('screen').width - 60}px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.radius.default}px;
   padding: 20px;

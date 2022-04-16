@@ -9,6 +9,7 @@ export const Graphic = ({
   income,
   outcome,
   currency,
+  hideValues = false,
 }: GraphicProps): JSX.Element => {
   const [incomePercentage, setIncomePercentage] = useState(0);
   const [outcomePercentage, setOutcomePercentage] = useState(0);
@@ -51,8 +52,12 @@ export const Graphic = ({
       </GraphicBar>
 
       <Info>
-        <Text color="success">{formatCurrency(income, currency)}</Text>
-        <Text color="danger">{formatCurrency(outcome, currency)}</Text>
+        <Text color="success">
+          {hideValues ? '***' : formatCurrency(income, currency)}
+        </Text>
+        <Text color="danger">
+          {hideValues ? '***' : formatCurrency(outcome, currency)}
+        </Text>
       </Info>
     </Container>
   );

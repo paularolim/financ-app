@@ -4,4 +4,5 @@ export interface GraphicProps {
   income: number;
   outcome: number;
   currency: CurrencyTypes;
+  hideValues?: boolean;
 }

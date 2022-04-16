@@ -8,16 +8,13 @@ export const Container = styled.View`
   padding-bottom: 40px;
 `;
 
-export const IconWrapper = styled.TouchableOpacity`
-  margin-right: 22px;
+export const MonthContainer = styled.View`
+  flex-direction: row;
 `;
 
 export const Title = styled.View`
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin: 60px 40px;
-`;
-
-export const Separator = styled.View`
-  width: 15px;
+  margin: 30px;
 `;

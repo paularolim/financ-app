@@ -10,42 +10,103 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import { FabButton } from '../../components/FabButton';
+import { useDashboardState } from '../../core/application/states/dashboard';
 import { useUserStore } from '../../core/application/states/user';
+import { Transaction } from '../../core/domain/entities/Transaction';
+import { Wallet } from '../../core/domain/entities/Wallet';
 import { Header } from '../../feature-components/Header';
+import { ListWallets } from '../../feature-components/ListWallets';
 import { TransactionCard } from '../../feature-components/TransactionCard';
-import { Transaction } from '../../global/types/Transaction';
 import { TransactionForm } from '../../modais/TransactionForm';
 import { WalletForm } from '../../modais/WalletForm';
 import { getAllTransactions } from '../../services/firestore';
 import { TransactionsEmptyList } from './components/TransactionsEmptyList';
 import { TransactionsHeader } from './components/TransactionsHeader';
 import { TransactionsSeparator } from './components/TransactionsSeparator';
+import { getAllWalletsFromUser, getTransactionsFromWallets } from './presenter';
 import { Container } from './styles';
+
+const initialWallet: Wallet = {
+  id: 'total',
+  title: 'Total',
+  balance: 0,
+  income: 0,
+  outcome: 0,
+  currency: 'BRL',
+  user: 'mock_id',
+  transactions: [],
+};
 
 export const Dashboard = (): JSX.Element => {
   const [modalTransactionVisible, setModalTransactionVisible] = useState(false);
   const [modalWalletVisible, setModalWalletVisible] = useState(false);
+
+  const [totalWallet, setTotalWallets] = useState<Wallet>(initialWallet);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  const activeWallet = useDashboardState(state => state.wallet);
   const user = useUserStore().user;
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const subscriber = () => {
-      if (user) {
-        getAllTransactions(user, setTransactions);
-      }
-      setLoading(false);
-    };
+  const calculateTotal = (items: Wallet[]) => {
+    if (user) {
+      console.log(`[DASHBOARD] calculating total from user ${user.id}`);
 
-    return () => subscriber();
+      let _balance = 0;
+      let _income = 0;
+      let _outcome = 0;
+      items.forEach(wallet => {
+        _balance += wallet.balance;
+        _income += wallet.income;
+        _outcome += wallet.outcome;
+      });
+      setTotalWallets({
+        ...initialWallet,
+        balance: _balance,
+        income: _income,
+        outcome: _outcome,
+        user: user.id,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getAllWalletsFromUser(
+        user,
+        _wallets => {
+          setWallets(_wallets);
+          calculateTotal(_wallets);
+        },
+        error => console.log(error),
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  useEffect(() => {
+    if (user && activeWallet) {
+      getTransactionsFromWallets(
+        activeWallet,
+        _transactions => {
+          setTransactions(_transactions);
+          setLoading(false);
+        },
+        error => console.log(error),
+      );
+    }
+  }, [user, activeWallet]);
 
   return (
     <Container>
-      <Header title="Dashboard" />
+      <Header>
+        {/* TODO: list transactions from all wallets */}
+        <ListWallets data={[totalWallet, ...wallets]} />
+      </Header>
       <FabButton
         onPressTransaction={() =>
           setModalTransactionVisible(!modalTransactionVisible)
@@ -60,6 +121,7 @@ export const Dashboard = (): JSX.Element => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => {
+              // TODO: update list on refresh
               getAllTransactions(user, setTransactions);
               setRefreshing(false);
             }}

@@ -1,110 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import React from 'react';
 
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { Icon } from '../../components/Icon';
 import { Text } from '../../components/Text';
-import { useUserStore } from '../../core/application/states/user';
-import { Wallet } from '../../core/domain/entities/Wallet';
-import { getAllWalletsFromUser } from '../../screens/Dashboard/presenter';
-import { Card } from '../Card';
-import { Container, IconWrapper, Separator, Title } from './styles';
+import { useDashboardState } from '../../core/application/states/dashboard';
+import { Container, MonthContainer, Title } from './styles';
 import { HeaderProps } from './types';
-const SeparatorComponent = (): JSX.Element => <Separator />;
-
-const initialWallet: Wallet = {
-  id: '001',
-  title: 'Total',
-  balance: 0,
-  income: 0,
-  outcome: 0,
-  currency: 'BRL',
-  user: 'mock_id',
-  transactions: [],
-};
 
 // TODO: hidde cards when scroll screen (only show "Dashboard")
-export const Header = ({ title }: HeaderProps): JSX.Element => {
-  const [wallets, setWallets] = useState<Wallet[]>([]);
-  const [totalWallet, setTotalWallets] = useState<Wallet>(initialWallet);
-
+export const Header = ({ children }: HeaderProps): JSX.Element => {
   const navigation = useNavigation();
-  const user = useUserStore().user;
 
-  const calculateTotal = (items: Wallet[]) => {
-    if (user) {
-      console.log(`[DASHBOARD] calculating total from user ${user.id}`);
-
-      let _balance = 0;
-      let _income = 0;
-      let _outcome = 0;
-      items.forEach(wallet => {
-        _balance += wallet.balance;
-        _income += wallet.income;
-        _outcome += wallet.outcome;
-      });
-      setTotalWallets({
-        ...initialWallet,
-        balance: _balance,
-        income: _income,
-        outcome: _outcome,
-        user: user.id,
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      getAllWalletsFromUser(
-        user,
-        _wallets => {
-          setWallets(_wallets);
-          calculateTotal(_wallets);
-        },
-        error => console.log(error),
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  const [hideValues, setHideValues] = useDashboardState(state => [
+    state.hideValues,
+    state.setHideValues,
+  ]);
 
   return (
     <Container>
       <Title>
-        <IconWrapper
+        <Icon
+          name="menu-outline"
           onPress={(): void => navigation.dispatch(DrawerActions.openDrawer())}
-        >
-          <Icon name="menu-outline" />
-        </IconWrapper>
-        <Text fontSize="big" color="white" bold>
-          {title}
-        </Text>
-      </Title>
+        />
 
-      {/* TODO: list transctions from wallet when on press */}
-      <FlatList
-        data={[totalWallet, ...wallets]}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <Card
-            currency={item.currency}
-            title={item.title}
-            income={item.income}
-            outcome={item.outcome}
-            value={item.balance}
-          />
+        {/* TODO: remove month mock */}
+        <MonthContainer>
+          <Icon name="chevron-back-outline" marginRight={25} size="small" />
+          <Text fontSize="medium" color="white" bold>
+            Novembro
+          </Text>
+          <Icon name="chevron-forward-outline" marginLeft={25} size="small" />
+        </MonthContainer>
+
+        {hideValues ? (
+          <Icon name="eye-outline" size="small" onPress={setHideValues} />
+        ) : (
+          <Icon name="eye-off-outline" size="small" onPress={setHideValues} />
         )}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={SeparatorComponent}
-        contentContainerStyle={styles.listContainer}
-      />
+      </Title>
+      {children}
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  listContainer: {
-    paddingHorizontal: 40,
-  },
-});
