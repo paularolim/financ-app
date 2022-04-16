@@ -45,7 +45,7 @@ export class WalletRepository implements IWalletRepository {
               outcome: doc.data().outcome || 0,
               currency: doc.data().currency || 'BRL',
               user: doc.data().user || '',
-              transactions: doc.data().transactions || [],
+              transactions: [],
             });
           });
           onSuccess(_wallets);

@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 
+import { Transaction } from '../../domain/entities/Transaction';
 import {
   InputCreateTransaction,
   ITransactionRepository,
@@ -42,10 +43,45 @@ export class TransactionRepository implements ITransactionRepository {
                 outcome: outcomeUpdated,
               });
 
-          transactionsRef.add({ title, description, amount });
+          transactionsRef.add({ title, description, amount, type });
         }
       })
       .then(onSuccess)
       .catch(onError);
+  }
+
+  getTransactionsFromWallet(
+    walletId: string,
+    onSuccess: (transactions: Transaction[]) => void,
+    onError: (error: Error) => void,
+  ): void {
+    const transactionsRef = firestore().collection(
+      `wallets/${walletId}/transactions`,
+    );
+
+    try {
+      transactionsRef.onSnapshot(querySnapshot => {
+        const _transactions: Transaction[] = [];
+
+        querySnapshot.forEach(doc => {
+          console.log(
+            `[TRANSACTION REPOSITORY] +1 transaction found (${doc.id})`,
+          );
+          const data = doc.data();
+
+          _transactions.push({
+            id: doc.id,
+            title: data.title,
+            description: data.description,
+            amount: data.amount,
+            type: data.type,
+          });
+        });
+
+        onSuccess(_transactions);
+      });
+    } catch (error) {
+      onError(error as Error);
+    }
   }
 }

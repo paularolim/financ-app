@@ -1,3 +1,5 @@
+import { Transaction } from '../entities/Transaction';
+
 export interface InputCreateTransaction {
   walletId: string;
   title: string;
@@ -13,6 +15,15 @@ export interface ITransactionRepository {
   createTransaction(
     input: InputCreateTransaction,
     onSuccess: () => void,
+    onError: (error: Error) => void,
+  ): void;
+
+  /**
+   * Get all transactions from wallet.
+   */
+  getTransactionsFromWallet(
+    walletId: string,
+    onSuccess: (transactions: Transaction[]) => void,
     onError: (error: Error) => void,
   ): void;
 }
