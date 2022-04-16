@@ -11,4 +11,5 @@ export interface IconProps {
   marginLeft?: number;
   marginHorizontal?: number;
   marginVertical?: number;
+  onPress?: () => void;
 }

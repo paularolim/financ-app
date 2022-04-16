@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import VectorIcon from 'react-native-vector-icons/Ionicons';
 
 import { theme } from '../../global/theme';
@@ -23,7 +23,9 @@ export const Icon = ({
   marginLeft = 0,
   marginHorizontal = 0,
   marginVertical = 0,
+  onPress,
 }: IconProps): JSX.Element => {
+  // TODO: refactor styles and touchable
   const styles = StyleSheet.create({
     icon: {
       margin,
@@ -35,11 +37,24 @@ export const Icon = ({
   });
 
   return (
-    <VectorIcon
-      name={name}
-      size={theme.iconSize[size]}
-      color={theme.colors[color]}
-      style={styles.icon}
-    />
+    <>
+      {onPress ? (
+        <TouchableOpacity onPress={onPress}>
+          <VectorIcon
+            name={name}
+            size={theme.iconSize[size]}
+            color={theme.colors[color]}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      ) : (
+        <VectorIcon
+          name={name}
+          size={theme.iconSize[size]}
+          color={theme.colors[color]}
+          style={styles.icon}
+        />
+      )}
+    </>
   );
 };
