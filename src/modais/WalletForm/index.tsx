@@ -7,6 +7,7 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { Text } from '../../components/Text';
 import { useUserStore } from '../../core/application/states/user';
+import { FeedbackMessage } from '../../feature-components/FeedbackMessage';
 import { createWallet } from './presenter';
 import { schema } from './schema';
 import { Container } from './styles';
@@ -14,6 +15,8 @@ import { FormData, WalletFormProps } from './types';
 
 export const WalletForm = ({ onClose }: WalletFormProps): JSX.Element => {
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
+  const [registerError, setRegisterError] = useState<boolean>(false);
+  const [registerSuccess, setRegisterSuccess] = useState<boolean>(false);
 
   const user = useUserStore().user;
 
@@ -27,6 +30,8 @@ export const WalletForm = ({ onClose }: WalletFormProps): JSX.Element => {
   });
 
   const handleRegister = ({ title }: FormData): void => {
+    setRegisterError(false);
+    setRegisterSuccess(false);
     setRegisterLoading(true);
 
     if (user) {
@@ -34,11 +39,11 @@ export const WalletForm = ({ onClose }: WalletFormProps): JSX.Element => {
         title,
         user,
         () => {
+          setRegisterSuccess(true);
           reset();
         },
-        // TODO: IMPROVE ERROR FEEDBACK
         () => {
-          console.log('Error while create wallet!');
+          setRegisterError(true);
         },
       );
     }
@@ -47,25 +52,35 @@ export const WalletForm = ({ onClose }: WalletFormProps): JSX.Element => {
   };
 
   return (
-    <Container>
-      <Text fontSize="medium" bold>
-        Register Wallet
-      </Text>
+    <>
+      <Container>
+        <Text fontSize="medium" bold>
+          Register Wallet
+        </Text>
 
-      <Text>Title</Text>
-      <Input
-        placeholder="Title"
-        error={errors.title && errors.title.message}
-        control={control}
-        name="title"
-      />
+        <Text>Title</Text>
+        <Input
+          placeholder="Title"
+          error={errors.title && errors.title.message}
+          control={control}
+          name="title"
+        />
 
-      <Button
-        text="Register"
-        onPress={handleSubmit(handleRegister)}
-        loading={registerLoading}
-      />
-      <Button text="Close" type="secondary" onPress={onClose} />
-    </Container>
+        <Button
+          text="Register"
+          onPress={handleSubmit(handleRegister)}
+          loading={registerLoading}
+          disabled={registerLoading}
+        />
+        <Button text="Close" type="secondary" onPress={onClose} />
+      </Container>
+
+      {registerSuccess && (
+        <FeedbackMessage message="Wallet added successfully" type="success" />
+      )}
+      {registerError && (
+        <FeedbackMessage message="Could not add wallet" type="error" />
+      )}
+    </>
   );
 };

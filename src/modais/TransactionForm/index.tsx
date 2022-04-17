@@ -10,6 +10,7 @@ import { Text } from '../../components/Text';
 import { TransactionType } from '../../components/TransactionType';
 import { useUserStore } from '../../core/application/states/user';
 import { Wallet } from '../../core/domain/entities/Wallet';
+import { FeedbackMessage } from '../../feature-components/FeedbackMessage';
 import { createTransaction, getAllWalletsFromUser } from './presenter';
 import { schema } from './schema';
 import { Container, TransactionButtonGroup, TransactionGroup } from './styles';
@@ -24,11 +25,11 @@ export const TransactionForm = ({
   const [walletOptions, setWalletOptions] = useState<Wallet[]>([]);
   const [walletSelected, setWalletSelected] = useState<string | null>(null);
 
-  const [transactionTypeError, setTransactionTypeError] = useState<
-    string | null
-  >(null);
+  const [typeError, setTypeError] = useState<string | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null);
 
+  const [registerError, setRegisterError] = useState<boolean>(false);
+  const [registerSuccess, setRegisterSuccess] = useState<boolean>(false);
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
 
   const user = useUserStore().user;
@@ -43,8 +44,11 @@ export const TransactionForm = ({
   });
 
   const handleRegister = ({ title, description, amount }: FormData): void => {
+    setRegisterError(false);
+    setRegisterSuccess(false);
+
     if (!transactionType) {
-      return setTransactionTypeError('Transaction type is required!');
+      return setTypeError('Transaction type is required!');
     }
 
     if (!walletSelected) {
@@ -60,9 +64,11 @@ export const TransactionForm = ({
       parseFloat(amount),
       transactionType,
       () => {
+        setRegisterSuccess(true);
         reset();
       },
       error => {
+        setRegisterError(true);
         console.log(error);
       },
     );
@@ -79,77 +85,89 @@ export const TransactionForm = ({
   }, [user]);
 
   return (
-    <Container>
-      <Text fontSize="medium" bold>
-        Register Transaction
-      </Text>
+    <>
+      <Container>
+        <Text fontSize="medium" bold>
+          Register Transaction
+        </Text>
 
-      <Text>Wallet</Text>
-      {walletOptions ? (
-        <Select
-          items={walletOptions}
-          selectedItem={walletSelected}
-          onChangeItem={setWalletSelected}
-        />
-      ) : (
-        <Text>Add a new wallet</Text>
-      )}
-      {walletError && <Text>{walletError}</Text>}
-
-      <Text>Title</Text>
-      <Input
-        placeholder="Title"
-        error={errors.title && errors.title.message}
-        control={control}
-        name="title"
-      />
-      <Text>Description</Text>
-      <Input
-        placeholder="Description"
-        error={errors.description && errors.description.message}
-        control={control}
-        name="description"
-      />
-      <Text>Amount</Text>
-      <Input
-        placeholder="Amount"
-        error={errors.amount && errors.amount.message}
-        control={control}
-        name="amount"
-      />
-      <TransactionGroup>
-        <TransactionButtonGroup>
-          <TransactionType
-            text="Income"
-            type="income"
-            onPress={() => {
-              setTransactionType('income');
-            }}
-            active={transactionType === 'income'}
+        <Text>Wallet</Text>
+        {walletOptions ? (
+          <Select
+            items={walletOptions}
+            selectedItem={walletSelected}
+            onChangeItem={setWalletSelected}
           />
-          <TransactionType
-            text="Outcome"
-            type="outcome"
-            onPress={() => {
-              setTransactionType('outcome');
-            }}
-            active={transactionType === 'outcome'}
-          />
-        </TransactionButtonGroup>
-
-        {transactionTypeError && (
-          <Text color="primary" fontSize="small">
-            {transactionTypeError}
-          </Text>
+        ) : (
+          <Text>Add a new wallet</Text>
         )}
-      </TransactionGroup>
+        {walletError && <Text>{walletError}</Text>}
 
-      <Button
-        text="Register"
-        onPress={handleSubmit(handleRegister)}
-        loading={registerLoading}
-      />
-      <Button text="Close" type="secondary" onPress={onClose} />
-    </Container>
+        <Text>Title</Text>
+        <Input
+          placeholder="Title"
+          error={errors.title && errors.title.message}
+          control={control}
+          name="title"
+        />
+        <Text>Description</Text>
+        <Input
+          placeholder="Description"
+          error={errors.description && errors.description.message}
+          control={control}
+          name="description"
+        />
+        <Text>Amount</Text>
+        <Input
+          placeholder="Amount"
+          error={errors.amount && errors.amount.message}
+          control={control}
+          name="amount"
+        />
+        <TransactionGroup>
+          <TransactionButtonGroup>
+            <TransactionType
+              text="Income"
+              type="income"
+              onPress={() => {
+                setTransactionType('income');
+              }}
+              active={transactionType === 'income'}
+            />
+            <TransactionType
+              text="Outcome"
+              type="outcome"
+              onPress={() => {
+                setTransactionType('outcome');
+              }}
+              active={transactionType === 'outcome'}
+            />
+          </TransactionButtonGroup>
+
+          {typeError && (
+            <Text color="primary" fontSize="small">
+              {typeError}
+            </Text>
+          )}
+        </TransactionGroup>
+
+        <Button
+          text="Register"
+          onPress={handleSubmit(handleRegister)}
+          loading={registerLoading}
+        />
+        <Button text="Close" type="secondary" onPress={onClose} />
+      </Container>
+
+      {registerSuccess && (
+        <FeedbackMessage
+          message="Transaction added successfully"
+          type="success"
+        />
+      )}
+      {registerError && (
+        <FeedbackMessage message="Could not add transaction" type="error" />
+      )}
+    </>
   );
 };

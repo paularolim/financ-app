@@ -2,11 +2,10 @@ import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
-import { WalletCard } from '..';
-
 import { useDashboardState } from '../../core/application/states/dashboard';
 import { Wallet } from '../../core/domain/entities/Wallet';
 import { theme } from '../../global/theme';
+import { WalletCard } from '../WalletCard';
 import { CardCarouselProps } from './types';
 
 export const ListWallets = ({ data }: CardCarouselProps<Wallet[]>) => {
