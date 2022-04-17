@@ -6,6 +6,7 @@ export interface InputCreateTransaction {
   description: string;
   amount: number;
   type: 'income' | 'outcome';
+  date: Date;
 }
 
 export interface ITransactionRepository {

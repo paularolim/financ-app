@@ -10,7 +10,14 @@ export class TransactionRepository implements ITransactionRepository {
   private collection = 'wallets';
 
   createTransaction(
-    { walletId, amount, type, title, description }: InputCreateTransaction,
+    {
+      walletId,
+      amount,
+      type,
+      title,
+      description,
+      date,
+    }: InputCreateTransaction,
     onSuccess: () => void,
     onError: (error: Error) => void,
   ): void {
@@ -43,7 +50,7 @@ export class TransactionRepository implements ITransactionRepository {
                 outcome: outcomeUpdated,
               });
 
-          transactionsRef.add({ title, description, amount, type });
+          transactionsRef.add({ title, description, amount, type, date });
         }
       })
       .then(onSuccess)
@@ -75,6 +82,7 @@ export class TransactionRepository implements ITransactionRepository {
             description: data.description,
             amount: data.amount,
             type: data.type,
+            date: data.date,
           });
         });
 

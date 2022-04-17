@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import DatePicker from 'react-native-date-picker';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -13,7 +14,12 @@ import { Wallet } from '../../core/domain/entities/Wallet';
 import { FeedbackMessage } from '../../feature-components/FeedbackMessage';
 import { createTransaction, getAllWalletsFromUser } from './presenter';
 import { schema } from './schema';
-import { Container, TransactionButtonGroup, TransactionGroup } from './styles';
+import {
+  Container,
+  Scroll,
+  TransactionButtonGroup,
+  TransactionGroup,
+} from './styles';
 import { FormData, TransactionFormProps } from './types';
 
 export const TransactionForm = ({
@@ -24,6 +30,7 @@ export const TransactionForm = ({
   >(null);
   const [walletOptions, setWalletOptions] = useState<Wallet[]>([]);
   const [walletSelected, setWalletSelected] = useState<string | null>(null);
+  const [date, setDate] = useState(new Date());
 
   const [typeError, setTypeError] = useState<string | null>(null);
   const [walletError, setWalletError] = useState<string | null>(null);
@@ -63,6 +70,7 @@ export const TransactionForm = ({
       description,
       parseFloat(amount),
       transactionType,
+      date,
       () => {
         setRegisterSuccess(true);
         reset();
@@ -90,67 +98,70 @@ export const TransactionForm = ({
         <Text fontSize="medium" bold>
           Register Transaction
         </Text>
-
-        <Text>Wallet</Text>
-        {walletOptions ? (
-          <Select
-            items={walletOptions}
-            selectedItem={walletSelected}
-            onChangeItem={setWalletSelected}
-          />
-        ) : (
-          <Text>Add a new wallet</Text>
-        )}
-        {walletError && <Text>{walletError}</Text>}
-
-        <Text>Title</Text>
-        <Input
-          placeholder="Title"
-          error={errors.title && errors.title.message}
-          control={control}
-          name="title"
-        />
-        <Text>Description</Text>
-        <Input
-          placeholder="Description"
-          error={errors.description && errors.description.message}
-          control={control}
-          name="description"
-        />
-        <Text>Amount</Text>
-        <Input
-          placeholder="Amount"
-          error={errors.amount && errors.amount.message}
-          control={control}
-          name="amount"
-        />
-        <TransactionGroup>
-          <TransactionButtonGroup>
-            <TransactionType
-              text="Income"
-              type="income"
-              onPress={() => {
-                setTransactionType('income');
-              }}
-              active={transactionType === 'income'}
+        <Scroll>
+          <Text>Wallet</Text>
+          {walletOptions ? (
+            <Select
+              items={walletOptions}
+              selectedItem={walletSelected}
+              onChangeItem={setWalletSelected}
             />
-            <TransactionType
-              text="Outcome"
-              type="outcome"
-              onPress={() => {
-                setTransactionType('outcome');
-              }}
-              active={transactionType === 'outcome'}
-            />
-          </TransactionButtonGroup>
-
-          {typeError && (
-            <Text color="primary" fontSize="small">
-              {typeError}
-            </Text>
+          ) : (
+            <Text>Add a new wallet</Text>
           )}
-        </TransactionGroup>
+          {walletError && <Text>{walletError}</Text>}
 
+          <Text>Title</Text>
+          <Input
+            placeholder="Title"
+            error={errors.title && errors.title.message}
+            control={control}
+            name="title"
+          />
+          <Text>Description</Text>
+          <Input
+            placeholder="Description"
+            error={errors.description && errors.description.message}
+            control={control}
+            name="description"
+          />
+          <Text>Amount</Text>
+          <Input
+            placeholder="Amount"
+            error={errors.amount && errors.amount.message}
+            control={control}
+            name="amount"
+          />
+          <TransactionGroup>
+            <TransactionButtonGroup>
+              <TransactionType
+                text="Income"
+                type="income"
+                onPress={() => {
+                  setTransactionType('income');
+                }}
+                active={transactionType === 'income'}
+              />
+              <TransactionType
+                text="Outcome"
+                type="outcome"
+                onPress={() => {
+                  setTransactionType('outcome');
+                }}
+                active={transactionType === 'outcome'}
+              />
+            </TransactionButtonGroup>
+
+            {typeError && (
+              <Text color="primary" fontSize="small">
+                {typeError}
+              </Text>
+            )}
+          </TransactionGroup>
+
+          <Text>Date</Text>
+          <DatePicker date={date} onDateChange={setDate} mode="date" />
+        </Scroll>
         <Button
           text="Register"
           onPress={handleSubmit(handleRegister)}

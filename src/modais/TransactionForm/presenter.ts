@@ -25,6 +25,7 @@ export const createTransaction = (
   description: string,
   amount: number,
   type: 'income' | 'outcome',
+  date: Date,
   onSuccess: () => void,
   onError: (error: Error) => void,
 ): void => {
@@ -35,7 +36,7 @@ export const createTransaction = (
   const repository = new TransactionRepository();
   const service = new CreateTransaction(repository);
   service.handle(
-    { walletId, title, description, amount, type },
+    { walletId, title, description, amount, type, date },
     onSuccess,
     onError,
   );

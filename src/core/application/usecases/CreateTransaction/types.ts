@@ -4,6 +4,7 @@ export interface InputTransaction {
   description: string;
   amount: number;
   type: 'income' | 'outcome';
+  date: Date;
 }
 
 export interface ICreateTransaction {
