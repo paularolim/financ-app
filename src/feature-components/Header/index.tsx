@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { Icon } from '../../components/Icon';
 import { Text } from '../../components/Text';
 import { useDashboardState } from '../../core/application/states/dashboard';
+import { months } from './months';
 import { Container, MonthContainer, Title } from './styles';
 import { HeaderProps } from './types';
 
@@ -16,6 +17,45 @@ export const Header = ({ children }: HeaderProps): JSX.Element => {
     state.hideValues,
     state.setHideValues,
   ]);
+  const [selectedMonthLabel, setSelectedMonthLabel] = useState('');
+  const [selectedMonthNumber, setSelectedMonthNumber] = useState(1);
+  const [selectedYearNumber, setSelectedYearNumber] = useState(2022);
+
+  const nextMonth = () => {
+    let _nextMonth = selectedMonthNumber + 1;
+    let _nextYear = selectedYearNumber;
+
+    if (_nextMonth === 12) {
+      // switch to next year
+      _nextMonth = 0;
+      _nextYear = selectedYearNumber + 1;
+      setSelectedYearNumber(_nextYear);
+    }
+    setSelectedMonthLabel(`${months[_nextMonth]}/${_nextYear}`);
+    setSelectedMonthNumber(_nextMonth);
+  };
+
+  const prevMonth = () => {
+    let _prevMonth = selectedMonthNumber - 1;
+    let _prevYear = selectedYearNumber;
+
+    if (_prevMonth === -1) {
+      // back to last year
+      _prevMonth = 11;
+      _prevYear = selectedYearNumber - 1;
+      setSelectedYearNumber(_prevYear);
+    }
+    setSelectedMonthLabel(`${months[_prevMonth]}/${_prevYear}`);
+    setSelectedMonthNumber(_prevMonth);
+  };
+
+  useEffect(() => {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    setSelectedMonthLabel(`${months[currentMonth]}/${currentYear}`);
+    setSelectedMonthNumber(currentMonth);
+    setSelectedYearNumber(currentYear);
+  }, []);
 
   return (
     <Container>
@@ -25,13 +65,22 @@ export const Header = ({ children }: HeaderProps): JSX.Element => {
           onPress={(): void => navigation.dispatch(DrawerActions.openDrawer())}
         />
 
-        {/* TODO: remove month mock */}
         <MonthContainer>
-          <Icon name="chevron-back-outline" marginRight={25} size="small" />
+          <Icon
+            name="chevron-back-outline"
+            marginRight={25}
+            size="small"
+            onPress={prevMonth}
+          />
           <Text fontSize="medium" color="white" bold>
-            Novembro
+            {selectedMonthLabel}
           </Text>
-          <Icon name="chevron-forward-outline" marginLeft={25} size="small" />
+          <Icon
+            name="chevron-forward-outline"
+            marginLeft={25}
+            size="small"
+            onPress={nextMonth}
+          />
         </MonthContainer>
 
         {hideValues ? (
