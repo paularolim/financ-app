@@ -73,6 +73,8 @@ export const TransactionForm = ({
       date,
       () => {
         setRegisterSuccess(true);
+        setDate(new Date());
+        setTransactionType(null);
         reset();
       },
       error => {
