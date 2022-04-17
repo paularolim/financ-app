@@ -11,4 +11,5 @@ export interface TransactionCardProps extends TouchableOpacityProps {
   value: number;
   currency?: CurrencyTypes;
   type?: 'income' | 'outcome';
+  date: Date;
 }

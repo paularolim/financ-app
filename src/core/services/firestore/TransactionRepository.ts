@@ -67,7 +67,7 @@ export class TransactionRepository implements ITransactionRepository {
     );
 
     try {
-      transactionsRef.onSnapshot(querySnapshot => {
+      transactionsRef.orderBy('date', 'desc').onSnapshot(querySnapshot => {
         const _transactions: Transaction[] = [];
 
         querySnapshot.forEach(doc => {
@@ -82,7 +82,7 @@ export class TransactionRepository implements ITransactionRepository {
             description: data.description,
             amount: data.amount,
             type: data.type,
-            date: data.date,
+            date: data?.date?.toDate()?.toLocaleDateString('en-US') || '',
           });
         });
 

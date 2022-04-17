@@ -14,6 +14,7 @@ export const TransactionCard = ({
   currency = 'BRL',
   value,
   type = 'income',
+  date,
   ...rest
 }: TransactionCardProps): JSX.Element => (
   <Container {...rest}>
@@ -27,9 +28,14 @@ export const TransactionCard = ({
         <Text fontSize="small">{formatCurrency(value, currency)}</Text>
       </InfoContainer>
 
-      <Text fontSize="xsmall" color="text_light">
-        {description}
-      </Text>
+      <InfoContainer>
+        <Text fontSize="xsmall" color="text_light">
+          {description}
+        </Text>
+        <Text fontSize="xsmall" color="text_light">
+          {date}
+        </Text>
+      </InfoContainer>
     </InfoWrapper>
   </Container>
 );

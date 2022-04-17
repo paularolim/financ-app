@@ -19,7 +19,7 @@ import { ListWallets } from '../../feature-components/ListWallets';
 import { TransactionCard } from '../../feature-components/TransactionCard';
 import { TransactionForm } from '../../modais/TransactionForm';
 import { WalletForm } from '../../modais/WalletForm';
-import { getAllTransactions } from '../../services/firestore';
+// import { getAllTransactions } from '../../services/firestore';
 import { TransactionsEmptyList } from './components/TransactionsEmptyList';
 import { TransactionsHeader } from './components/TransactionsHeader';
 import { TransactionsSeparator } from './components/TransactionsSeparator';
@@ -104,7 +104,6 @@ export const Dashboard = (): JSX.Element => {
   return (
     <Container>
       <Header>
-        {/* TODO: list transactions from all wallets */}
         <ListWallets data={[totalWallet, ...wallets]} />
       </Header>
       <FabButton
@@ -122,7 +121,7 @@ export const Dashboard = (): JSX.Element => {
             refreshing={refreshing}
             onRefresh={() => {
               // TODO: update list on refresh
-              getAllTransactions(user, setTransactions);
+              // getAllTransactions(user, setTransactions);
               setRefreshing(false);
             }}
             style={styles.refreshControl}
@@ -136,6 +135,7 @@ export const Dashboard = (): JSX.Element => {
                   description={item.description}
                   value={item.amount}
                   type={item.type}
+                  date={item.date}
                   onPress={() => {
                     navigation.navigate('Details');
                   }}
