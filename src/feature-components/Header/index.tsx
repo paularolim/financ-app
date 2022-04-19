@@ -21,6 +21,11 @@ export const Header = ({ children }: HeaderProps): JSX.Element => {
   const [selectedMonthNumber, setSelectedMonthNumber] = useState(1);
   const [selectedYearNumber, setSelectedYearNumber] = useState(2022);
 
+  const [setFilterFirstDate, setFilterLastDate] = useDashboardState(state => [
+    state.setFilterFirstDate,
+    state.setFilterLastDate,
+  ]);
+
   const nextMonth = () => {
     let _nextMonth = selectedMonthNumber + 1;
     let _nextYear = selectedYearNumber;
@@ -56,6 +61,22 @@ export const Header = ({ children }: HeaderProps): JSX.Element => {
     setSelectedMonthNumber(currentMonth);
     setSelectedYearNumber(currentYear);
   }, []);
+
+  useEffect(() => {
+    const firstDayOfCurrentMonth = new Date(
+      selectedYearNumber,
+      selectedMonthNumber,
+      1,
+    );
+    const lastDayOfCurrentMonth = new Date(
+      selectedYearNumber,
+      selectedMonthNumber + 1,
+      0,
+    );
+    setFilterFirstDate(firstDayOfCurrentMonth.getTime().toString());
+    setFilterLastDate(lastDayOfCurrentMonth.getTime().toString());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYearNumber, selectedMonthNumber]);
 
   return (
     <Container>

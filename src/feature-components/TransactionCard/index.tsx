@@ -33,7 +33,7 @@ export const TransactionCard = ({
           {description}
         </Text>
         <Text fontSize="xsmall" color="text_light">
-          {date}
+          {date.toLocaleDateString('en-US')}
         </Text>
       </InfoContainer>
     </InfoWrapper>

@@ -48,7 +48,9 @@ export const Dashboard = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const activeWallet = useDashboardState(state => state.wallet);
+  const [activeWallet, filterFirstDate, filterLastDate] = useDashboardState(
+    state => [state.wallet, state.filterFirstDate, state.filterLastDate],
+  );
   const user = useUserStore().user;
   const navigation = useNavigation();
 
@@ -88,8 +90,13 @@ export const Dashboard = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  /**
+   * Get transactions from database.
+   */
   useEffect(() => {
-    if (user && activeWallet) {
+    const hasFilter = filterFirstDate && filterLastDate;
+
+    if (user && activeWallet && !hasFilter) {
       getTransactionsFromWallets(
         activeWallet,
         _transactions => {
@@ -98,8 +105,19 @@ export const Dashboard = (): JSX.Element => {
         },
         error => console.log(error),
       );
+    } else if (user && activeWallet && hasFilter) {
+      getTransactionsFromWallets(
+        activeWallet,
+        _transactions => {
+          setTransactions(_transactions);
+          setLoading(false);
+        },
+        error => console.log(error),
+        filterFirstDate,
+        filterLastDate,
+      );
     }
-  }, [user, activeWallet]);
+  }, [user, activeWallet, filterFirstDate, filterLastDate]);
 
   return (
     <Container>
