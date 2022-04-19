@@ -50,7 +50,13 @@ export class TransactionRepository implements ITransactionRepository {
                 outcome: outcomeUpdated,
               });
 
-          transactionsRef.add({ title, description, amount, type, date });
+          transactionsRef.add({
+            title,
+            description,
+            amount,
+            type,
+            date: date.getTime(),
+          });
         }
       })
       .then(onSuccess)
