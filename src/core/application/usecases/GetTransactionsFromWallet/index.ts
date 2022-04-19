@@ -9,7 +9,15 @@ export class GetTransactionsFromWallet implements IGetTransactionsFromWallet {
     walletId: string,
     onSuccess: (transactions: Transaction[]) => void,
     onError: (error: Error) => void,
+    startDate?: string,
+    endDate?: string,
   ): void {
-    this.repository.getTransactionsFromWallet(walletId, onSuccess, onError);
+    this.repository.getTransactionsFromWallet(
+      walletId,
+      onSuccess,
+      onError,
+      startDate,
+      endDate,
+    );
   }
 }

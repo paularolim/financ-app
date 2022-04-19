@@ -5,5 +5,7 @@ export interface IGetTransactionsFromWallet {
     walletId: string,
     onSuccess: (transactions: Transaction[]) => void,
     onError: (error: Error) => void,
+    startDate?: string,
+    endDate?: string,
   ): void;
 }

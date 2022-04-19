@@ -67,35 +67,74 @@ export class TransactionRepository implements ITransactionRepository {
     walletId: string,
     onSuccess: (transactions: Transaction[]) => void,
     onError: (error: Error) => void,
+    startDate?: string,
+    endDate?: string,
   ): void {
     const transactionsRef = firestore().collection(
       `wallets/${walletId}/transactions`,
     );
 
-    try {
-      transactionsRef.orderBy('date', 'desc').onSnapshot(querySnapshot => {
-        const _transactions: Transaction[] = [];
+    if (startDate && endDate) {
+      console.log(
+        `[TRANSACTION REPOSITORY] transactions from ${startDate} to ${endDate}`,
+      );
 
-        querySnapshot.forEach(doc => {
-          console.log(
-            `[TRANSACTION REPOSITORY] +1 transaction found (${doc.id})`,
-          );
-          const data = doc.data();
+      try {
+        transactionsRef
+          .orderBy('date', 'desc')
+          .where('date', '>=', parseInt(startDate || '0', 10))
+          .where('date', '<=', parseInt(endDate || '0', 10))
+          .onSnapshot(querySnapshot => {
+            const _transactions: Transaction[] = [];
 
-          _transactions.push({
-            id: doc.id,
-            title: data.title,
-            description: data.description,
-            amount: data.amount,
-            type: data.type,
-            date: data?.date?.toDate()?.toLocaleDateString('en-US') || '',
+            querySnapshot.forEach(doc => {
+              console.log(
+                `[TRANSACTION REPOSITORY] +1 transaction found (${doc.id})`,
+              );
+              const data = doc.data();
+
+              _transactions.push({
+                id: doc.id,
+                title: data.title,
+                description: data.description,
+                amount: data.amount,
+                type: data.type,
+                // date: data?.date?.toDate()?.toLocaleDateString('en-US') || '',
+                date: new Date(data.date),
+              });
+            });
+
+            onSuccess(_transactions);
           });
-        });
+      } catch (error) {
+        onError(error as Error);
+      }
+    } else {
+      try {
+        transactionsRef.orderBy('date', 'desc').onSnapshot(querySnapshot => {
+          const _transactions: Transaction[] = [];
 
-        onSuccess(_transactions);
-      });
-    } catch (error) {
-      onError(error as Error);
+          querySnapshot.forEach(doc => {
+            console.log(
+              `[TRANSACTION REPOSITORY] +1 transaction found (${doc.id})`,
+            );
+            const data = doc.data();
+
+            _transactions.push({
+              id: doc.id,
+              title: data.title,
+              description: data.description,
+              amount: data.amount,
+              type: data.type,
+              date: data?.date?.toDate()?.toLocaleDateString('en-US') || '',
+            });
+          });
+
+          onSuccess(_transactions);
+        });
+      } catch (error) {
+        onError(error as Error);
+      }
     }
   }
 }

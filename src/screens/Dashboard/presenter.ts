@@ -22,11 +22,13 @@ export const getTransactionsFromWallets = (
   walletId: string,
   onSuccess: (transactions: Transaction[]) => void,
   onError: (error: Error) => void,
+  startDate?: string,
+  endDate?: string,
 ) => {
   console.log(
     `[DASHBOARD PRESENTER] finding transactions from wallet ${walletId}`,
   );
   const repository = new TransactionRepository();
   const service = new GetTransactionsFromWallet(repository);
-  service.handle(walletId, onSuccess, onError);
+  service.handle(walletId, onSuccess, onError, startDate, endDate);
 };
