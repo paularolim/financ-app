@@ -8,3 +8,7 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+
+# Error - java.lang.IllegalStateException: java.lang.NoSuchFieldException: fill
+# https://stackoverflow.com/a/58798921
+-keep public class com.horcrux.svg.** {*;}
