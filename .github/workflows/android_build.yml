@@ -73,5 +73,5 @@ jobs:
           appId: ${{secrets.ANDROID_FIREBASE_APP_ID}}
           token: ${{secrets.ANDROID_FIREBASE_TOKEN}}
           groups: testers
-          file: android/app/build/outputs/apk/release/app-universal-release.apk
+          file: android/app/build/outputs/apk/release/app-universal-release-unsigned-signed.apk
           # file: ${{steps.sign_app.outputs.signedReleaseFile}}
