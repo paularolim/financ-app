@@ -36,7 +36,7 @@ jobs:
 
       ## create google-services.json
       - name: Create JSON file
-        run: pwd && ls -a && touch /home/runner/work/financ-app/android/app/google-services.json | base64
+        run: touch /home/runner/work/financ-app/financ-app/android/app/google-services.json | base64
 
       ## putting data into google-services.json
       - name: Putting data into JSON file
