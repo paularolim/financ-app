@@ -42,7 +42,7 @@ jobs:
       - name: Putting data into JSON file
         env:
           DATA: ${{ secrets.ANDROID_FIREBASE_GOOGLE_SERVICES }}
-        run: echo $DATA > /home/runner/work/financ-app/android/app/google-services.json
+        run: echo $DATA > /home/runner/work/financ-app/financ-app/android/app/google-services.json
 
       ## configure cash for gradle : will help to reduce build time
       - name: Cache Gradle Wrapper
