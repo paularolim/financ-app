@@ -1,4 +1,4 @@
-package com.financapp;
+package com.isnewart.financ;
 
 import com.facebook.react.ReactActivity;
 
